@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <.env/WifiCredentials.cpp>
 #include <LittleFS.h>
 #include <pitches.h>
 #include <ESP8266WiFi.h>
@@ -8,11 +9,6 @@
 
 #include <uri/UriBraces.h>
 #include <uri/UriRegex.h>
-
-#ifndef STASSID
-#define STASSID "CHANGE_TO_YOUR_SSID"
-#define STAPSK "CHANGE_TO_YOUR_PASSWORD"
-#endif
 
 const char *ssid = STASSID;
 const char *password = STAPSK;
