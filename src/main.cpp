@@ -71,8 +71,8 @@ void playMellody(QUIZ_RESULT type)
 
 void quizWon()
 {
-  openDoor();
   playMellody(QUIZ_RESULT::WON);
+  openDoor();
 }
 
 void handleNotFound()
@@ -125,8 +125,18 @@ void setup(void)
     Serial.println("MDNS responder started");
   }
 
-  server.on("/quiz", []()
-            { quizWon(); });
+  server.on(UriBraces("/quiz/result/{}"), HTTP_POST, []()
+            {
+              String result = server.pathArg(0);
+              Serial.println("Quiz " + result);
+              if (result == "won")
+              {
+                quizWon();
+              }
+              else if (result == "lose")
+              {
+                /* code */
+              } });
 
   server.on(UriBraces("/users/{}"), []()
             {
