@@ -138,12 +138,13 @@ let schedulerAddedTrack = 0;
             successMessage.hidden = true;
             submitBtn.disabled = true;
             console.log("Errado! Tente novamente!");
+            sendQuiz("lose");
           } else {
             successMessage.hidden = false;
             wrongAnswerMessage.hidden = true;
             submitBtn.disabled = true;
             console.log("Parabens!!! Você ganhou");
-            sendQuiz("1");
+            sendQuiz("won");
           }
         });
 
