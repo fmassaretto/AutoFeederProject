@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <.env/WifiCredentials.cpp>
 #include <LittleFS.h>
-#include <pitches.h>
+#include <../lib/mellodyMaker/MellodyMaker.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -18,34 +18,6 @@ ESP8266WebServer server(80);
 int LED = 2;
 #define BUZZER_PIN D3
 #define SERVO_PIN D4
-// notes in the melody:
-int melody[] = {
-    NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4};
-
-// note durations: 4 = quarter note, 8 = eighth note, etc.:
-int noteDurations[] = {
-    4, 8, 8, 4, 4, 4, 4, 4};
-
-void playSong()
-{
-  // iterate over the notes of the melody:
-  for (int thisNote = 0; thisNote < 8; thisNote++)
-  {
-    Serial.println("playing here...");
-
-    // to calculate the note duration, take one second divided by the note type.
-    // e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-    int noteDuration = 1000 / noteDurations[thisNote];
-    tone(BUZZER_PIN, melody[thisNote], noteDuration);
-
-    // to distinguish the notes, set a minimum time between them.
-    // the note's duration + 30% seems to work well:
-    int pauseBetweenNotes = noteDuration * 1.30;
-    delay(pauseBetweenNotes);
-    // stop the tone playing:
-    noTone(BUZZER_PIN);
-  }
-}
 
 void openDoor()
 {
@@ -61,17 +33,18 @@ enum QUIZ_RESULT
   LOSE
 };
 
-void playMellody(QUIZ_RESULT type)
+void playSong(QUIZ_RESULT type)
 {
   if (type == QUIZ_RESULT::WON)
   {
-    playSong();
+    setMellody(lose_mellody, BUZZER_PIN);
+    playMellody();
   }
 }
 
 void quizWon()
 {
-  playMellody(QUIZ_RESULT::WON);
+  playSong(QUIZ_RESULT::WON);
   openDoor();
 }
 
