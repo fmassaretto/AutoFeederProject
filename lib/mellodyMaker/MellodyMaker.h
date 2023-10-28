@@ -3,7 +3,7 @@
 #include <map>
 
 uint8_t buzzerPin;
-std::map<int, int> difinedMellody;
+std::map<int, int> definedMellody;
 
 std::map<int, int> won_mellody = {
     {NOTE_C4, 4},
@@ -117,7 +117,7 @@ std::map<int, int> lose_mellody = {
 
 void setMellody(std::map<int, int> _definedMellody, uint8_t _pin)
 {
-    difinedMellody = _definedMellody;
+    definedMellody = _definedMellody;
     buzzerPin = _pin;
 }
 
@@ -125,7 +125,7 @@ void playMellody()
 {
     std::map<int, int>::iterator it;
     // iterate over the notes of the melody:
-    for (it = difinedMellody.begin(); it != difinedMellody.end(); ++it)
+    for (it = definedMellody.begin(); it != definedMellody.end(); ++it)
     {
         Serial.println("starting playing here...");
 
