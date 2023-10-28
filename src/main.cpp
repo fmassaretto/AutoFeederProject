@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <.env/WifiCredentials.cpp>
 #include <LittleFS.h>
-#include <../lib/mellodyMaker/MellodyMaker.h>
+#include <../lib/mellodyMaker/MellodyMaker2.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -37,8 +37,11 @@ void playSong(QUIZ_RESULT type)
 {
   if (type == QUIZ_RESULT::WON)
   {
-    setMellody(lose_mellody, BUZZER_PIN);
-    playMellody();
+    playWonMellody(BUZZER_PIN);
+  }
+  else if (type == QUIZ_RESULT::LOSE)
+  {
+    playLoseMellody(BUZZER_PIN);
   }
 }
 
