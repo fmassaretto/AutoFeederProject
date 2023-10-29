@@ -64,9 +64,24 @@
             role="tabpanel"
             aria-labelledby="scheduler-tab"
           >
-            <form>
+            <form id="scheduler-form">
               <div class="scheduler-container">
-                <div id="time-scheduler" class="time-container"></div>
+                <div id="time-scheduler" class="time-container">
+                  <div id="scheduler0" class="scheduler">
+                    <div class="hour">
+                      <label for="hour0">Hora:</label>
+                      <input type="number" id="hour0" name="hour0" min="1" max="24" />
+                    </div>
+                    <div class="minute">
+                      <label for="minute0">Minuto:</label>
+                      <input type="number" id="minute0" name="minute0" min="0" max="59" />
+                    </div>
+                    <div class="second">
+                      <label for="second0">Segundo:</label>
+                      <input type="number" id="second0" name="second0" min="0" max="59" />
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="add-container">
                 <svg
