@@ -1,4 +1,6 @@
-let schedulerAddedTrack = 0;
+let schedulerAddedTrack = 1;
+var scheduleTimeArray = new Array();
+
       function atualizar() {
         $.ajax({
           type: "POST",
@@ -7,6 +9,21 @@ let schedulerAddedTrack = 0;
           success: function (dados) {
             $("#temperatura").html(dados);
             window.setTimeout(atualizar, 60000);
+          },
+          erro: function (erro) {
+            console.log("Erro: " + erro);
+          },
+        });
+      }
+
+      function sendScheduler(jsonData){
+        $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: window.location + "schedule/",
+          data: JSON.stringify(jsonData),
+          success: function (data) {
+              console.log(data);
           },
           erro: function (erro) {
             console.log("Erro: " + erro);
@@ -34,6 +51,7 @@ let schedulerAddedTrack = 0;
         let elemtnToRemove = document.getElementById(elementId);
         const timeScheduler = document.getElementById("time-scheduler");
         timeScheduler.removeChild(elemtnToRemove);
+        schedulerAddedTrack--;
       }
 
       function createSchedulerElement(count) {
@@ -109,8 +127,8 @@ let schedulerAddedTrack = 0;
 
       $(document).ready(function () {
         let addSchedulerBtn = document.getElementById("addBtn");
-        let removeSchedulerBtn = document.getElementById("");
         let quizForm = document.getElementById("quiz-form");
+        let schedulerForm = document.getElementById("scheduler-form");
         let submitBtn = document.getElementById("submitBtn");
         let successMessage = document.getElementById("successMessage");
         let wrongAnswerMessage = document.getElementById("wrongAnswerMessage");
@@ -120,7 +138,29 @@ let schedulerAddedTrack = 0;
 
         addSchedulerBtn.addEventListener("click", (e) => {
           e.preventDefault();
-          createSchedulerElement(schedulerAddedTrack);
+          if(schedulerAddedTrack < 3){
+            createSchedulerElement(schedulerAddedTrack);
+          }
+        });
+
+        schedulerForm.addEventListener("submit", (e)=>{
+          e.preventDefault();
+          console.log(e.target);
+          var data = new FormData(schedulerForm);
+          scheduleTimeArray = new Array();
+
+          data.forEach((value, key) =>{
+            var scheduleTimeJson = new Object();
+            scheduleTimeJson.key = key;
+            scheduleTimeJson.value = parseInt(value);
+
+            scheduleTimeArray.push(scheduleTimeJson);
+          })
+          // console.log("scheduleJsonObj");
+          // console.log("--------------");
+          // let scheduleJson = JSON.parse(JSON.stringify(scheduleTimeArray));
+          console.log(scheduleTimeArray);
+          sendScheduler(scheduleTimeArray);
         });
 
         quizForm.addEventListener("submit", (e) => {
@@ -153,6 +193,4 @@ let schedulerAddedTrack = 0;
           wrongAnswerMessage.hidden = true;
           successMessage.hidden = true;
         });
-
-        createSchedulerElement(schedulerAddedTrack);
       });
