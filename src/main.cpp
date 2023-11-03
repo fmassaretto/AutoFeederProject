@@ -371,10 +371,11 @@ void loop(void)
 
   if(pinSensor == LOW){
     if(now.hour() == fisrtTimeScheduleHour && now.minute() == firstTimeScheduleMinute || now.hour() == secondTimeScheduleHour && now.minute() == secondTimeScheduleMinute || now.hour() == thirdTimeScheduleHour  && now.minute() == thirdTimeScheduleMinute){
-      servo.write(90);
+      servo.write(90);   
+      delay(500);
     } 
   } else{
-    servo.write(0);
+      servo.write(0);
   }
 }
 
