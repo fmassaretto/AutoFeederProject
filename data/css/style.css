@@ -1,38 +1,46 @@
+span {
+  font-size: larger;
+}
+
+#current-time {
+  font-weight: 400;
+}
+
 .time-container {
-    display: inline-grid;
-    margin: 10px;
-  }
-  .scheduler {
-    display: inline-flex;
-    align-items: flex-end;
-  }
+  display: inline-grid;
+  margin: 10px;
+}
+.scheduler {
+  display: inline-flex;
+  align-items: flex-end;
+}
 
-  .scheduler > div {
-    height: auto;
-  }
+.scheduler > div {
+  height: auto;
+}
 
-  .removeBtn {
-    margin-left: 12px;
-  }
+.removeBtn {
+  margin-left: 12px;
+}
 
-  #addBtn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    transform: scale(2.5);
-    color: blue;
-  }
+#addBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  transform: scale(2.5);
+  color: blue;
+}
 
-  .quiz-container {
-    margin-top: 5px;
-    margin-left: 15px;
-  }
+.quiz-container {
+  margin-top: 5px;
+  margin-left: 15px;
+}
 
-  .question {
-    margin-top: 15px;
-  }
+.question {
+  margin-top: 15px;
+}
 
-  .btn {
-    margin-top: 15px;
-    margin-right: 10px;
-  }
+.btn {
+  margin-top: 15px;
+  margin-right: 10px;
+}
