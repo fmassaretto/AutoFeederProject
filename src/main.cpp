@@ -255,8 +255,8 @@ void handleNotFound()
   digitalWrite(LED, 0);
 }
 
-void distanceCalc() {
-
+void distanceCalc() 
+{
   digitalWrite(trigPin, LOW); //Pulsando o sensor ultrassônico 
   delayMicroseconds(10);
   digitalWrite(trigPin, HIGH);
@@ -266,27 +266,28 @@ void distanceCalc() {
   duracao = pulseIn(echoPin, HIGH);
   distancia = duracao / 58; //Calculando distancia 
 
-
-void infraRed(){
-   do{
-    servo.write(0);
-  }while(digitalRead(pinSensor) == HIGH);
-}
-
-void levelCheck(){
-  if (distancia >= 50 && distancia <= 60) { //Precisamos medir o recipiente e arrumar a estrutura condicional
+void levelCheck()
+{
+  if (distancia >= 50 && distancia <= 60) 
+  { 
     lcd.setCursor(0, 0);
     lcd.print("Cheio");
     delay(500);
-  } else if (distancia < 50 && distancia >= 30) {
+  } 
+  else if (distancia < 50 && distancia >= 30) 
+  {
     lcd.setCursor(0, 0);
     lcd.print("Pela metade");
     delay(500);
-  } else if (distancia < 30 && distancia >= 10) {
+  } 
+  else if (distancia < 30 && distancia >= 10) 
+  {
     lcd.setCursor(0, 0);
     lcd.print("Quase vazio");
     delay(500);
-  } else if (distancia < 10) {
+  } 
+  else if (distancia < 10) 
+  {
     lcd.setCursor(0, 0);
     lcd.print("Vazio");
     delay(500);
@@ -311,7 +312,8 @@ void setup(void)
     Serial.println("RTC nao encontrado");
     while (1);
   }
-  if (! rtc.isrunning()) {
+  if (! rtc.isrunning()) 
+  {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
   WiFi.mode(WIFI_STA);
@@ -369,12 +371,16 @@ void loop(void)
   lcd.clear();
   DateTime now = rtc.now();
 
-  if(pinSensor == LOW){
-    if(now.hour() == fisrtTimeScheduleHour && now.minute() == firstTimeScheduleMinute || now.hour() == secondTimeScheduleHour && now.minute() == secondTimeScheduleMinute || now.hour() == thirdTimeScheduleHour  && now.minute() == thirdTimeScheduleMinute){
+  if(pinSensor == LOW)
+  {
+    if(now.hour() == fisrtTimeScheduleHour && now.minute() == firstTimeScheduleMinute || now.hour() == secondTimeScheduleHour && now.minute() == secondTimeScheduleMinute || now.hour() == thirdTimeScheduleHour  && now.minute() == thirdTimeScheduleMinute)
+    {
       servo.write(90);   
       delay(500);
     } 
-  } else{
+  } 
+  else
+  {
       servo.write(0);
   }
 }
