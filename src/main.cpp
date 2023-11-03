@@ -11,12 +11,24 @@
 #include <uri/UriBraces.h>
 #include <uri/UriRegex.h>
 
+#include <Wire.h>
+#include <Adafruit_I2CDevice.h>
+#include <Adafruit_BusIO_Register.h>
+#include <RTClib.h>
+#include <Servo.h>
+#include <Ultrasonic.h>
+#include <LiquidCrystal.h>
+
 const char *ssid = STASSID;
 const char *password = STAPSK;
 
 int LED = 2;
+const int pinSensor = 17;
+const int echoPin = 26;
+const int trigPin = 25;
 #define BUZZER_PIN D3
 #define SERVO_PIN D4
+
 
 int fisrtTimeScheduleHour = 0;
 int fisrtTimeScheduleMinute = 0;
@@ -29,6 +41,15 @@ int secondTimeScheduleSecond = 0;
 int thirdTimeScheduleHour = 0;
 int thirdTimeScheduleMinute = 0;
 int thirdTimeScheduleSecond = 0;
+
+long distancia;
+long duracao;
+
+Servo servo;
+RTC_DS1307 rtc;
+LiquidCrystal lcd (22, 21, 5, 18, 23, 19);
+Ultrasonic ultra(trigPin, echoPin);
+
 
 ESP8266WebServer server(80);
 
@@ -234,14 +255,67 @@ void handleNotFound()
   digitalWrite(LED, 0);
 }
 
+void distanceCalc() 
+{
+  digitalWrite(trigPin, LOW); //Pulsando o sensor ultrassônico 
+  delayMicroseconds(10);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duracao = pulseIn(echoPin, HIGH);
+  distancia = duracao / 58; //Calculando distancia 
+
+void levelCheck()
+{
+  if (distancia >= 50 && distancia <= 60) 
+  { 
+    lcd.setCursor(0, 0);
+    lcd.print("Cheio");
+    delay(500);
+  } 
+  else if (distancia < 50 && distancia >= 30) 
+  {
+    lcd.setCursor(0, 0);
+    lcd.print("Pela metade");
+    delay(500);
+  } 
+  else if (distancia < 30 && distancia >= 10) 
+  {
+    lcd.setCursor(0, 0);
+    lcd.print("Quase vazio");
+    delay(500);
+  } 
+  else if (distancia < 10) 
+  {
+    lcd.setCursor(0, 0);
+    lcd.print("Vazio");
+    delay(500);
+  }
+}
+
 void setup(void)
 {
   Serial.begin(115200);
+  servo.attach(SERVO_PIN);
+  lcd.begin(16, 2);
   pinMode(LED, OUTPUT);
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(SERVO_PIN, OUTPUT);
   digitalWrite(BUZZER_PIN, LOW);
   digitalWrite(SERVO_PIN, LOW);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(pinSensor, INPUT);
+  Wire.begin(15, 2);
+  if (! rtc.begin()) {
+    Serial.println("RTC nao encontrado");
+    while (1);
+  }
+  if (! rtc.isrunning()) 
+  {
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  }
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   Serial.println("");
@@ -290,4 +364,25 @@ void setup(void)
 void loop(void)
 {
   server.handleClient();
+  void distanceCalc();
+  void infraRed();
+  void levelCheck();
+
+  lcd.clear();
+  DateTime now = rtc.now();
+
+  if(pinSensor == LOW)
+  {
+    if(now.hour() == fisrtTimeScheduleHour && now.minute() == firstTimeScheduleMinute || now.hour() == secondTimeScheduleHour && now.minute() == secondTimeScheduleMinute || now.hour() == thirdTimeScheduleHour  && now.minute() == thirdTimeScheduleMinute)
+    {
+      servo.write(90);   
+      delay(500);
+    } 
+  } 
+  else
+  {
+      servo.write(0);
+  }
 }
+
+
