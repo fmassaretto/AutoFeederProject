@@ -23,4 +23,5 @@ Para gravar os arquivos html, css, js que ficam na pasta '/data' na placa ESP, p
 
 - Clicar no icone do PlatformIO(barra lateral do VS Code)
 - Irá abrir uma seção do lado e em 'Project Tasks', abrir as opçõe do projeto, abrir a opção 'Platform' e clicar em 'Upload FileSystem Image'
+
   ![Alt text](<VSCode PLtformIO UFI.png>)
