@@ -1,22 +1,6 @@
 let schedulerAddedTrack = 1;
 let scheduleTimeArray = new Array();
 
-// TODO: remove it later
-// function atualizar() {
-//   $.ajax({
-//     type: "POST",
-//     contentType: "text/plain",
-//     url: window.location + "quiz",
-//     success: function (dados) {
-//       $("#temperatura").html(dados);
-//       window.setTimeout(atualizar, 60000);
-//     },
-//     erro: function (erro) {
-//       console.log("Erro: " + erro);
-//     },
-//   });
-// }
-
 function sendScheduler(jsonData) {
   $.ajax({
     type: "POST",
@@ -39,6 +23,34 @@ function sendQuiz(result) {
     url: window.location + "quiz/result/" + String(result),
     success: function () {
       console.log("Enviado ");
+    },
+    erro: function (erro) {
+      console.log("Erro: " + erro);
+    },
+  });
+}
+
+function checkBowlStatus() {
+  $.ajax({
+    type: "GET",
+    contentType: "text/plain",
+    url: window.location + "bowl-status/",
+    success: function (data) {
+      document.getElementById("bowl-status").innerText = data;
+    },
+    erro: function (erro) {
+      console.log("Erro: " + erro);
+    },
+  });
+}
+
+function checkTankStatus() {
+  $.ajax({
+    type: "GET",
+    contentType: "text/plain",
+    url: window.location + "tank-status/",
+    success: function (data) {
+      document.getElementById("tank-status").innerText = data;
     },
     erro: function (erro) {
       console.log("Erro: " + erro);
@@ -137,9 +149,9 @@ function formatTime(time) {
   return "0" + time;
 }
 
-function refreshCurrentTime() {
+function functionTimeout() {
   const refresh = 1000; // Refresh rate in milli seconds
-  mytime = setTimeout("displayCurrentTime()", refresh);
+  mytime = setTimeout("refreshContents()", refresh);
 }
 
 function displayCurrentTime() {
@@ -152,7 +164,13 @@ function displayCurrentTime() {
     formatTime(today.getSeconds());
 
   document.getElementById("current-time").innerText = time;
-  refreshCurrentTime();
+}
+
+function refreshContents() {
+  checkTankStatus();
+  checkBowlStatus();
+  displayCurrentTime();
+  functionTimeout();
 }
 
 function updateNextTimetable(arr) {
@@ -194,8 +212,6 @@ $(document).ready(function () {
 
   successMessage.hidden = true;
   wrongAnswerMessage.hidden = true;
-
-  displayCurrentTime();
 
   addSchedulerBtn.addEventListener("click", (e) => {
     e.preventDefault();
@@ -254,4 +270,7 @@ $(document).ready(function () {
     wrongAnswerMessage.hidden = true;
     successMessage.hidden = true;
   });
+
+  MQTTconnect();
+  refreshContents();
 });

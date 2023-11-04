@@ -78,29 +78,36 @@
             role="tabpanel"
             aria-labelledby="dashboard-tab"
           >
-            <div class="container">
+            <div class="container-fluid">
               <div class="row">
-                <div class="col-6 col-md-4"><span>Agora são:</span></div>
-                <div class="col-6 col-md-4"></div>
-                <div class="col-6 col-md-4"></div>
-                <div class="col-6 col-md-4"></div>
+                <div class="col">
+                  <span>Agora são:</span>
+                </div>
+                <div class="col"><span>Pote está:</span></div>
+                <div class="col"><span>Reservatorio está:</span></div>
               </div>
+
               <div class="row">
-                <div class="col-6 col-md-4">
+                <div class="col">
                   <h1 class="display-3" id="current-time">00:00:00</h1>
                 </div>
-                <div class="col-6 col-md-4"></div>
-                <div class="col-6 col-md-4"></div>
-                <div class="col-6 col-md-4"></div>
+                <div class="col"><span id="bowl-status">-----</span></div>
+                <div class="col"><span id="tank-status">-----</span></div>
               </div>
+
               <div class="row">
                 <div class="col"></div>
+                <div class="col"></div>
+                <div class="col"></div>
+              </div>
+
+              <div class="row">
                 <div class="col"><span>Proximos horarios:</span></div>
                 <div class="col"></div>
                 <div class="col"></div>
               </div>
+
               <div class="row">
-                <div class="col"></div>
                 <div class="col">
                   <div class="row">
                     <div class="col"><span>Horário 1:</span></div>
@@ -119,6 +126,7 @@
                 <div class="col"></div>
               </div>
             </div>
+            <!-- End container -->
           </div>
 
           <!-- Quiz section -->
