@@ -149,11 +149,6 @@ function formatTime(time) {
   return "0" + time;
 }
 
-function functionTimeout() {
-  const refresh = 1000; // Refresh rate in milli seconds
-  mytime = setTimeout("refreshContents()", refresh);
-}
-
 function displayCurrentTime() {
   let today = new Date();
   let time =
@@ -164,13 +159,6 @@ function displayCurrentTime() {
     formatTime(today.getSeconds());
 
   document.getElementById("current-time").innerText = time;
-}
-
-function refreshContents() {
-  checkTankStatus();
-  checkBowlStatus();
-  displayCurrentTime();
-  functionTimeout();
 }
 
 function updateNextTimetable(arr) {
@@ -212,6 +200,9 @@ $(document).ready(function () {
 
   successMessage.hidden = true;
   wrongAnswerMessage.hidden = true;
+
+  checkTankStatus();
+  checkBowlStatus();
 
   addSchedulerBtn.addEventListener("click", (e) => {
     e.preventDefault();
@@ -271,6 +262,9 @@ $(document).ready(function () {
     successMessage.hidden = true;
   });
 
-  MQTTconnect();
-  refreshContents();
+  setInterval(displayCurrentTime, 1000);
+  setInterval(() => {
+    checkTankStatus();
+    checkBowlStatus();
+  }, 10000);
 });
