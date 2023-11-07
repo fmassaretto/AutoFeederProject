@@ -18,6 +18,7 @@ Como trabalhar nesse projeto:
 - Clonar esse projeto
 - Abrir o platformIO e em 'Home' clicar em 'OPEN PROJECT' e selecionar o projeto clonado
 - Alterar a o SSID e senha do WIFI no arquivo WifiCredentials.cpp na pasta '.env'
+- Alterar a monitor_port e upload_port no arquivo platformio.ini para a porta do ESP8266 (ex.: COM8)
 
 Para gravar os arquivos html, css, js que ficam na pasta '/data' na placa ESP, pode utilizar o proprio platformIO do VS code:
 
