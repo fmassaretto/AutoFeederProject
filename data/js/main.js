@@ -1,6 +1,30 @@
 let schedulerAddedTrack = 1;
 let scheduleTimeArray = new Array();
 
+let fisrtTimeScheduleHour = -1;
+let fisrtTimeScheduleMinute = -1;
+let fisrtTimeScheduleSecond = -1;
+let secondTimeScheduleHour = -1;
+let secondTimeScheduleMinute = -1;
+let secondTimeScheduleSecond = -1;
+let thirdTimeScheduleHour = -1;
+let thirdTimeScheduleMinute = -1;
+let thirdTimeScheduleSecond = -1;
+
+function sendOpenDoor() {
+  $.ajax({
+    type: "GET",
+    contentType: "text/plain",
+    url: window.location + "open-door/",
+    success: function () {
+      console.log("abrir porta");
+    },
+    erro: function (erro) {
+      console.log("Erro: " + erro);
+    },
+  });
+}
+
 function sendScheduler(jsonData) {
   $.ajax({
     type: "POST",
@@ -158,6 +182,15 @@ function displayCurrentTime() {
     ":" +
     formatTime(today.getSeconds());
 
+
+    if ((today.getHours() == fisrtTimeScheduleHour && today.getMinutes() == fisrtTimeScheduleMinute && today.getSeconds() == fisrtTimeScheduleSecond) || 
+    (today.getHours() == secondTimeScheduleHour && today.getMinutes() == secondTimeScheduleMinute && today.getSeconds() == secondTimeScheduleSecond) ||
+    (today.getHours() == thirdTimeScheduleHour && today.getMinutes() == thirdTimeScheduleMinute && today.getSeconds() == thirdTimeScheduleSecond)) {
+      console.log("bateu horario");
+      sendOpenDoor();
+
+    }
+
   document.getElementById("current-time").innerText = time;
 }
 
@@ -171,9 +204,26 @@ function updateNextTimetable(arr) {
   let elemCount = 1;
   for (let i = 0; i < arr.length; i = i + 3) {
     const nextTimeElemId = "next-time-" + elemCount++;
-    const nextTimeHour = arr[i].value;
-    const nextTimeMinute = arr[i + 1].value;
-    const nextTimeSecond = arr[i + 2].value;
+    let index = i;
+    const nextTimeHour = arr[index].value;
+    const nextTimeMinute = arr[index + 1].value;
+    const nextTimeSecond = arr[index + 2].value;
+
+    console.log(i);
+
+    if(i == 0){
+      fisrtTimeScheduleHour = nextTimeHour;
+      fisrtTimeScheduleMinute = nextTimeMinute;
+      fisrtTimeScheduleSecond = nextTimeSecond;
+    } if (i == 1) {
+      secondTimeScheduleHour = nextTimeHour;
+      secondTimeScheduleMinute = nextTimeMinute;
+      secondTimeScheduleSecond = nextTimeSecond;
+    } else {
+      thirdTimeScheduleHour = nextTimeHour;
+      thirdTimeScheduleMinute = nextTimeMinute;
+      thirdTimeScheduleSecond = nextTimeSecond;
+    }
 
     const nextTimeFull =
       formatTime(nextTimeHour) +
@@ -182,12 +232,27 @@ function updateNextTimetable(arr) {
       ":" +
       formatTime(nextTimeSecond);
 
-    console.log(i);
     console.log(nextTimeElemId);
     console.log(nextTimeFull);
-
+    
+    
     document.getElementById(nextTimeElemId).innerText = nextTimeFull;
   }
+  console.log("here ");
+  console.log(fisrtTimeScheduleHour);
+    console.log(fisrtTimeScheduleMinute);
+    console.log(fisrtTimeScheduleSecond);
+    console.log('-------------------');
+    
+    console.log(secondTimeScheduleHour);
+    console.log(secondTimeScheduleMinute);
+    console.log(secondTimeScheduleSecond);
+    console.log('-------------------');
+    
+    console.log(thirdTimeScheduleHour);
+    console.log(thirdTimeScheduleMinute);
+    console.log(thirdTimeScheduleSecond);
+    console.log('-------------------');
 }
 
 $(document).ready(function () {
@@ -225,6 +290,8 @@ $(document).ready(function () {
 
       scheduleTimeArray.push(scheduleTimeJson);
     });
+
+    console.log(scheduleTimeArray);
 
     updateNextTimetable(scheduleTimeArray);
     sendScheduler(scheduleTimeArray);

@@ -12,7 +12,7 @@
 #include <Adafruit_I2CDevice.h>
 #include <Adafruit_BusIO_Register.h>
 #include <SPI.h>
-#include <RTClib.h>
+#include "RTClib.h"
 // #include <DS1307RTC.h>
 #include <Wire.h>
 #include <Ultrasonic.h>
@@ -92,8 +92,8 @@ int tankLevelDistance()
 {
   const int distance = ultra.read();
 
-  Serial.print("Distance in CM: ");
-  Serial.println(distance);
+  //Serial.print("Distance in CM: ");
+  //Serial.println(distance);
 
   return distance;
 }
@@ -103,17 +103,17 @@ int tankLevel()
   int tankLevelDistanceInCm = tankLevelDistance();
   if (tankLevelDistanceInCm <= 6)
   {
-    Serial.println("Reservatorio está cheio!");
+    //Serial.println("Reservatorio está cheio!");
     return TANK_LEVEL::FULL;
   }
   else if (tankLevelDistanceInCm > 6 && tankLevelDistanceInCm <= 10)
   {
-    Serial.println("Reservatorio pela metade!");
+    //Serial.println("Reservatorio pela metade!");
     return TANK_LEVEL::HALF_FULL;
   }
   else
   {
-    Serial.println("Reservatorio está vazio!");
+    //Serial.println("Reservatorio está vazio!");
     return TANK_LEVEL::EMPTY;
   }
 }
@@ -145,12 +145,12 @@ bool isBowlEmpty()
   irDetection = digitalRead(IR_PIN);
   if (irDetection == LOW)
   {
-    Serial.println("Pote está cheio!");
+    //Serial.println("Pote está cheio!");
     delay(100);
     return false;
   }
 
-  Serial.println("Pote VAZIO!");
+  //Serial.println("Pote VAZIO!");
   delay(100);
   return true;
 }
@@ -316,10 +316,19 @@ bool checkTankAndBowlLevelsOk()
 bool isRTCTimeAndSchedulesTimesMatch()
 {
   DateTime now = rtc.now();
-  const uint8_t rtcHour = now.hour();
-  const uint8_t rtcMinute = now.hour();
-  const uint8_t rtcSecond = now.hour();
-
+  int rtcHour = now.hour();
+  int rtcMinute = now.minute();
+  int rtcSecond = now.second();
+  delay(1000);
+Serial.println(rtcHour);
+Serial.println(rtcMinute);
+Serial.println(rtcSecond);
+Serial.println();
+Serial.printf("%i : %i : %i", fisrtTimeScheduleHour, fisrtTimeScheduleMinute, fisrtTimeScheduleSecond);
+Serial.printf("%i : %i : %i", secondTimeScheduleHour, secondTimeScheduleMinute, secondTimeScheduleSecond);
+Serial.printf("%i : %i : %i", thirdTimeScheduleHour, thirdTimeScheduleMinute, thirdTimeScheduleSecond);
+Serial.println();
+Serial.println();
   if (rtcHour == fisrtTimeScheduleHour && rtcMinute == fisrtTimeScheduleMinute && rtcSecond == fisrtTimeScheduleSecond)
   {
     return true;
@@ -343,9 +352,9 @@ void schedulerLogic()
 
   if (checkTankAndBowlLevelsOk())
   {
-    Serial.print("Bowl and tank levels are ");
-    Serial.println("OK!");
-    Serial.println();
+    //Serial.print("Bowl and tank levels are ");
+    //Serial.println("OK!");
+    //Serial.println();
     if (isOffline)
     {
       Serial.println("Is offline");
@@ -358,7 +367,7 @@ void schedulerLogic()
     }
     else
     {
-      Serial.println("Is online");
+      //Serial.println("Is online");
       // Display that it is connected and show the IP
       // VErify if the bowl is empty and if the 3 scheduled time matches with RTC
       if (isRTCTimeAndSchedulesTimesMatch())
@@ -366,6 +375,7 @@ void schedulerLogic()
         openDoor();
       }
         }
+        delay(2000);
   }
 }
 
@@ -410,6 +420,15 @@ void handleQuiz()
   server.send(200);
 }
 
+void handleOpenDoor()
+{
+Serial.println(";;;;;;;;;;;;;;;;;");
+Serial.println("open door");
+Serial.println(";;;;;;;;;;;;;;;;;;");
+  openDoor();
+  server.send(200);
+}
+
 void handleNotFound()
 {
   String message = "File Not Found\n\n";
@@ -443,7 +462,7 @@ void setupRTC()
     }
   }
 
-  Serial.print("RTC is running: ");
+  Serial.print("RTC is running  aaaa: ");
   Serial.println(rtc.isrunning() == 1 ? "YES" : "NO");
 
   if (!rtc.isrunning())
@@ -498,6 +517,8 @@ void setupServer()
   server.on("/tank-status/", HTTP_GET, handleTankStatus);
 
   server.on(UriBraces("/quiz/result/{}"), HTTP_POST, handleQuiz);
+
+  server.on("/open-door/", HTTP_GET, handleOpenDoor);
 
   server.on("/schedule/", HTTP_POST, handleScheduler);
 
@@ -568,88 +589,49 @@ void loop(void)
   //   isDoorAngleAtStartAdjusted = true;
   // }
 
-  server.handleClient();
   schedulerLogic();
-  // isBowlEmpty();
+  server.handleClient();
+  //delay(1000);
+  DateTime now = rtc.now();
 
-  // if (!ws.isConnected())
-  // {
-  //   ws.connect("echo.websocket.org", "/", 443);
-  // }
-  // else
-  // {
-  //   ws.send("hello");
+    Serial.print(now.year(), DEC);
+    Serial.print('/');
+    Serial.print(now.month(), DEC);
+    Serial.print('/');
+    Serial.print(now.day(), DEC);
+    Serial.print(" (");
+ 
+    Serial.print(") ");
+    Serial.print(now.hour(), DEC);
+    Serial.print(':');
+    Serial.print(now.minute(), DEC);
+    Serial.print(':');
+    Serial.print(now.second(), DEC);
+    Serial.println();
 
-  //   String msg;
-  //   if (ws.getMessage(msg))
-  //   {
-  //     Serial.println(msg);
-  //   }
-  // }
-  // delay(500);
+    Serial.print(" since midnight 1/1/1970 = ");
+    Serial.print(now.unixtime());
+    Serial.print("s = ");
+    Serial.print(now.unixtime() / 86400L);
+    Serial.println("d");
 
-  // DateTime now = rtc.now(); // Faz a leitura da data e hora atual, guarda na função now 
-  // int rtcHour = now.hour();
-  // int rtcMinute = now.minute();
-  // int rtcSecond = now.second();
+    // calculate a date which is 7 days, 12 hours, 30 minutes, and 6 seconds into the future
+    DateTime future (now + TimeSpan(7,12,30,6));
 
-  // Serial.println(String(now.hour()));
-  // Serial.printf("%d/%d/%d - %i:%i:%i", dt.year(), dt.month(), dt.day(), dt.hour(), dt.minute(), dt.second());
-  // Serial.println();
-  // delay(1000);
+    Serial.print(" now + 7d + 12h + 30m + 6s: ");
+    Serial.print(future.year(), DEC);
+    Serial.print('/');
+    Serial.print(future.month(), DEC);
+    Serial.print('/');
+    Serial.print(future.day(), DEC);
+    Serial.print(' ');
+    Serial.print(future.hour(), DEC);
+    Serial.print(':');
+    Serial.print(future.minute(), DEC);
+    Serial.print(':');
+    Serial.print(future.second(), DEC);
+    Serial.println();
 
-  // DateTime now = rtc.now();
-
-  // Serial.print(now.year(), DEC);
-  // Serial.print('/');
-  // Serial.print(now.month(), DEC);
-  // Serial.print('/');
-  // Serial.print(now.day(), DEC);
-  // Serial.print(" (");
-  // Serial.print(") ");
-  // Serial.print(now.hour(), DEC);
-  // Serial.print(':');
-  // Serial.print(now.minute(), DEC);
-  // Serial.print(':');
-  // Serial.print(now.second(), DEC);
-  // Serial.println();
-
-  // Serial.print(" since midnight 1/1/1970 = ");
-  // Serial.print(now.unixtime());
-  // Serial.print("s = ");
-  // Serial.print(now.unixtime() / 86400L);
-  // Serial.println("d");
-
-  // // calculate a date which is 7 days, 12 hours, 30 minutes, and 6 seconds into the future
-  // DateTime future(now + TimeSpan(7, 12, 30, 6));
-
-  // Serial.print(" now + 7d + 12h + 30m + 6s: ");
-  // Serial.print(future.year(), DEC);
-  // Serial.print('/');
-  // Serial.print(future.month(), DEC);
-  // Serial.print('/');
-  // Serial.print(future.day(), DEC);
-  // Serial.print(' ');
-  // Serial.print(future.hour(), DEC);
-  // Serial.print(':');FULL
-
-  // Serial.println();
-  // delay(3000);
-  // void distanceCalc();
-  // void levelCheck();
-
-  // DateTime now = rtc.now();
-
-  // if (pinSensor == LOW)
-  // {
-  //   if (now.hour() == fisrtTimeScheduleHour && now.minute() == fisrtTimeScheduleMinute || now.hour() == secondTimeScheduleHour && now.minute() == secondTimeScheduleMinute || now.hour() == thirdTimeScheduleHour && now.minute() == thirdTimeScheduleMinute)
-  //   {
-  //     servo.write(90);
-  //     delay(500);
-  //   }
-  // }
-  // else
-  // {
-  //   servo.write(0);
-  // }
+    Serial.println();
+    delay(3000);
 }
