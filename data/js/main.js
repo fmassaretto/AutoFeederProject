@@ -182,14 +182,20 @@ function displayCurrentTime() {
     ":" +
     formatTime(today.getSeconds());
 
-
-    if ((today.getHours() == fisrtTimeScheduleHour && today.getMinutes() == fisrtTimeScheduleMinute && today.getSeconds() == fisrtTimeScheduleSecond) || 
-    (today.getHours() == secondTimeScheduleHour && today.getMinutes() == secondTimeScheduleMinute && today.getSeconds() == secondTimeScheduleSecond) ||
-    (today.getHours() == thirdTimeScheduleHour && today.getMinutes() == thirdTimeScheduleMinute && today.getSeconds() == thirdTimeScheduleSecond)) {
-      console.log("bateu horario");
-      sendOpenDoor();
-
-    }
+  if (
+    (today.getHours() == fisrtTimeScheduleHour &&
+      today.getMinutes() == fisrtTimeScheduleMinute &&
+      today.getSeconds() == fisrtTimeScheduleSecond) ||
+    (today.getHours() == secondTimeScheduleHour &&
+      today.getMinutes() == secondTimeScheduleMinute &&
+      today.getSeconds() == secondTimeScheduleSecond) ||
+    (today.getHours() == thirdTimeScheduleHour &&
+      today.getMinutes() == thirdTimeScheduleMinute &&
+      today.getSeconds() == thirdTimeScheduleSecond)
+  ) {
+    console.log("bateu horario");
+    sendOpenDoor();
+  }
 
   document.getElementById("current-time").innerText = time;
 }
@@ -211,15 +217,17 @@ function updateNextTimetable(arr) {
 
     console.log(i);
 
-    if(i == 0){
+    if (i == 0) {
       fisrtTimeScheduleHour = nextTimeHour;
       fisrtTimeScheduleMinute = nextTimeMinute;
       fisrtTimeScheduleSecond = nextTimeSecond;
-    } if (i == 1) {
+    }
+    if (i == 3) {
       secondTimeScheduleHour = nextTimeHour;
       secondTimeScheduleMinute = nextTimeMinute;
       secondTimeScheduleSecond = nextTimeSecond;
-    } else {
+    }
+    if (i == 6) {
       thirdTimeScheduleHour = nextTimeHour;
       thirdTimeScheduleMinute = nextTimeMinute;
       thirdTimeScheduleSecond = nextTimeSecond;
@@ -234,25 +242,9 @@ function updateNextTimetable(arr) {
 
     console.log(nextTimeElemId);
     console.log(nextTimeFull);
-    
-    
+
     document.getElementById(nextTimeElemId).innerText = nextTimeFull;
   }
-  console.log("here ");
-  console.log(fisrtTimeScheduleHour);
-    console.log(fisrtTimeScheduleMinute);
-    console.log(fisrtTimeScheduleSecond);
-    console.log('-------------------');
-    
-    console.log(secondTimeScheduleHour);
-    console.log(secondTimeScheduleMinute);
-    console.log(secondTimeScheduleSecond);
-    console.log('-------------------');
-    
-    console.log(thirdTimeScheduleHour);
-    console.log(thirdTimeScheduleMinute);
-    console.log(thirdTimeScheduleSecond);
-    console.log('-------------------');
 }
 
 $(document).ready(function () {
@@ -290,8 +282,6 @@ $(document).ready(function () {
 
       scheduleTimeArray.push(scheduleTimeJson);
     });
-
-    console.log(scheduleTimeArray);
 
     updateNextTimetable(scheduleTimeArray);
     sendScheduler(scheduleTimeArray);
